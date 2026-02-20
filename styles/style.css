@@ -106,6 +106,7 @@ body {
   min-width: unset;
   height: 35vh;
   min-height: 200px;
+  position: relative;
   padding-top: 7px;
   text-align: center;
   background-color: var(--primary-color);
