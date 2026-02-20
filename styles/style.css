@@ -36,11 +36,76 @@ body {
   background-color: #e8f2fc;
 }
 
+/* =================================================================*/
+/* Main layout: flex container with draggable splitters             */
+/* =================================================================*/
+
+#main-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: stretch;
+  gap: 0;
+}
+
+#left-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 400px;
+  overflow: hidden;
+}
+
+#right-panel {
+  display: flex;
+  flex-direction: column;
+  width: 370px;
+  min-width: 250px;
+  flex-shrink: 0;
+}
+
+/* Wrapper around blocklyDiv — fills remaining left-panel height */
+.playground-pane {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* Vertical splitter (between left and right panels) */
+.splitter-v {
+  width: 6px;
+  cursor: col-resize;
+  background-color: var(--thin-lines-color);
+  border-radius: 3px;
+  flex-shrink: 0;
+  transition: background-color 0.15s;
+}
+
+.splitter-v:hover,
+.splitter-v.dragging {
+  background-color: var(--secondary-color);
+}
+
+/* Horizontal splitter (between stacked panes) */
+.splitter-h {
+  height: 6px;
+  cursor: row-resize;
+  background-color: var(--thin-lines-color);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin: 4px 0;
+  transition: background-color 0.15s;
+}
+
+.splitter-h:hover,
+.splitter-h.dragging {
+  background-color: var(--secondary-color);
+}
+
 .preview-pane {
-  width: 350px;
-  min-width: 300px;
+  width: 100%;
+  min-width: unset;
   height: 35vh;
-  min-height: 330px;
+  min-height: 200px;
   padding-top: 7px;
   text-align: center;
   background-color: var(--primary-color);
@@ -52,10 +117,10 @@ body {
 }
 
 .properties-pane {
-  width: 350px;
-  min-width: 300px;
-  height:30vh;
-  min-height: 250px;
+  width: 100%;
+  min-width: unset;
+  height: 30vh;
+  min-height: 100px;
   padding-top: 7px;
   margin-top: 7px;
   text-align: center;
@@ -68,8 +133,8 @@ body {
 }
 
 .download-button {
-  width: 350px;
-  min-width: 300px;
+  width: 100%;
+  min-width: unset;
   height: 40px;
   padding-top: 7px;
   margin-top: 2px;
@@ -83,20 +148,21 @@ body {
 }
 
 .information-pane {
-  width: auto;
-  min-width: 700px;
-  height: 7vh;
+  width: 100%;
+  min-width: unset;
+  min-height: 7vh;
   margin-top: 7px;
   padding-left: 15px;
   padding-top: 3px;
-  padding-right: 3px;
-  padding-bottom: 3px;
+  padding-right: 15px;
+  padding-bottom: 8px;
   text-align: left;
   background-color: #ccc;
   border-radius: 0.5rem;
   font-family: sans-serif;
   font-weight: bold;
   color: var(--primary-color);
+  overflow: hidden;
 }
 
 /* the separators in preview andproperties panes */
@@ -129,10 +195,10 @@ body {
 }
 
 /*that part adds very small stroke to workspace to beautify it*/
- .blocklyMainBackground {
+.blocklyMainBackground {
   stroke-width: 1;
   stroke: var(--primary-color);
-} 
+}
 
 /*style of text in blocks */
 /* .zelos-renderer.classic-theme .blocklyText {
