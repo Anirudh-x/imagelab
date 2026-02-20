@@ -43,11 +43,13 @@ Blockly.VerticalFlyout.prototype.getFlyoutScale = function () {
 // Coloring the information-pane when you select a block.
 workspace.addChangeListener(function (event) {
   if (event.type === Blockly.Events.SELECTED) {
-    document.getElementById("operator_name").innerText = workspace.getBlockById(
-      event.newElementId
-    )?.type;
-    document.getElementById("operator_description").innerText =
-      workspace.getBlockById(event.newElementId)?.tooltip;
+    const selectedBlock = workspace.getBlockById(event.newElementId);
+    document.getElementById("operator_name").innerText = selectedBlock
+      ? selectedBlock.type
+      : "Operation name";
+    document.getElementById("operator_description").innerText = selectedBlock
+      ? selectedBlock.tooltip || ""
+      : "Select a block to view its description";
   }
   if (event.type === Blockly.Events.BLOCK_CREATE) {
     mainController.addOperator(
@@ -199,7 +201,7 @@ function resetWorkspace() {
  */
 function downloadImage() {
   const downloadImage = mainController.getProcessedImage();
-  if(downloadImage != null) {
+  if (downloadImage != null) {
     var link = document.createElement("a");
     link.download = "Processed_image.jpg";
     link.href = downloadImage;
