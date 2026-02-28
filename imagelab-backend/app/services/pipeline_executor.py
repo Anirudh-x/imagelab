@@ -1,3 +1,5 @@
+import logging
+
 from app.models.pipeline import PipelineRequest, PipelineResponse, StepResult
 from app.operators.registry import get_operator
 from app.utils.image import compute_image_stats, decode_base64_image, encode_image_base64
@@ -48,9 +50,12 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
                         stats=stats,
                     )
                 )
-            except Exception:
-                # Non-fatal: skip capturing this step's intermediate
-                pass
+            except Exception as capture_err:
+                # Non-fatal: log and skip this step's intermediate instead of silently dropping it
+                logging.getLogger(__name__).warning(
+                    "Failed to capture intermediate for step %d (%s): %s: %s",
+                    i, step.type, type(capture_err).__name__, capture_err
+                )
 
     try:
         encoded = encode_image_base64(image, request.image_format)

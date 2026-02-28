@@ -23,9 +23,11 @@ def encode_image_base64(image: np.ndarray, fmt: str = "png") -> str:
 
 
 def compute_image_stats(image: np.ndarray) -> ImageStats:
-    """Compute statistics and per-channel histograms for a numpy image array."""
-    float_img = image.astype(np.float32)
+    """Compute statistics and per-channel histograms for a numpy image array.
 
+    Histograms are returned in OpenCV channel order (B/G/R[/A] for multi-channel
+    images, or a single bucket list for grayscale).
+    """
     if image.ndim == 2:
         # Grayscale
         height, width = image.shape
@@ -37,19 +39,24 @@ def compute_image_stats(image: np.ndarray) -> ImageStats:
         height, width = image.shape[:2]
         channels = image.shape[2]
         safe_img = np.clip(image, 0, 255).astype(np.uint8)
-        histograms = []
-        num_channels = min(channels, 3)  # Cap at RGB
-        for c in range(num_channels):
-            hist = cv2.calcHist([safe_img], [c], None, [256], [0, 256])
-            histograms.append(hist[:, 0].astype(int).tolist())
+        # Compute histograms for all channels present (supports BGR and BGRA)
+        histograms = [
+            cv2.calcHist([safe_img], [c], None, [256], [0, 256])[:, 0].astype(int).tolist()
+            for c in range(channels)
+        ]
+
+    # Compute min/max/mean without an extra full-size float32 copy
+    img_min = float(image.min())
+    img_max = float(image.max())
+    img_mean = round(float(image.astype(np.float64).mean()), 2)
 
     return ImageStats(
         width=width,
         height=height,
         channels=channels,
         dtype=str(image.dtype),
-        min=float(float_img.min()),
-        max=float(float_img.max()),
-        mean=round(float(float_img.mean()), 2),
+        min=img_min,
+        max=img_max,
+        mean=img_mean,
         histograms=histograms,
     )

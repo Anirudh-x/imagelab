@@ -32,8 +32,9 @@ function StepCard({
   const { stats } = result;
 
   return (
-    <div
-      className={`border rounded-lg overflow-hidden cursor-pointer transition-all ${isSelected
+    <button
+      type="button"
+      className={`w-full text-left border rounded-lg overflow-hidden cursor-pointer transition-all ${isSelected
           ? "border-indigo-400 ring-1 ring-indigo-300 bg-indigo-50"
           : "border-gray-200 hover:border-gray-300 bg-white"
         }`}
@@ -94,7 +95,7 @@ function StepCard({
           </div>
         </div>
       )}
-    </div>
+    </button>
   );
 }
 

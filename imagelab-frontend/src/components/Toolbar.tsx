@@ -63,6 +63,8 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
     setExecuting(true);
     setError(null);
+    // Clear stale intermediates from previous run before starting
+    setIntermediates([]);
 
     try {
       const response = await executePipeline({
@@ -74,8 +76,9 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
       if (response.success && response.image) {
         setProcessedImage(response.image);
-        if (showStepPreviews && response.intermediates) {
-          setIntermediates(response.intermediates);
+        // Always update intermediates when Step Preview is enabled (even if empty array)
+        if (showStepPreviews) {
+          setIntermediates(Array.isArray(response.intermediates) ? response.intermediates : []);
         }
       } else {
         setError(response.error || "Pipeline execution failed", response.step);
@@ -129,8 +132,8 @@ export default function Toolbar({ workspace }: ToolbarProps) {
       <button
         onClick={() => setShowStepPreviews(!showStepPreviews)}
         className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border transition-colors ${showStepPreviews
-            ? "bg-indigo-50 border-indigo-300 text-indigo-600"
-            : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+          ? "bg-indigo-50 border-indigo-300 text-indigo-600"
+          : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
           }`}
         title="Toggle per-step intermediate previews"
       >
@@ -162,10 +165,10 @@ export default function Toolbar({ workspace }: ToolbarProps) {
             </span>
             <span
               className={`text-[10px] uppercase font-bold tracking-wide ${complexity === "High"
-                  ? "text-red-500"
-                  : complexity === "Medium"
-                    ? "text-orange-500"
-                    : "text-green-500"
+                ? "text-red-500"
+                : complexity === "Medium"
+                  ? "text-orange-500"
+                  : "text-green-500"
                 }`}
             >
               {complexity} Complexity
