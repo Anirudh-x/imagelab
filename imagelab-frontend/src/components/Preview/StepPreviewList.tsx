@@ -89,7 +89,13 @@ function StepCard({
           {/* Histogram */}
           <div>
             <p className="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">
-              {stats.channels === 1 ? "Grayscale" : "BGR"} Histogram
+              {stats.channels === 1
+                ? "Grayscale"
+                : stats.channels === 3
+                ? "BGR"
+                : stats.channels === 4
+                ? "BGRA"
+                : `${stats.channels}-channel`} Histogram
             </p>
             <HistogramCanvas stats={stats} width={220} height={60} />
           </div>
