@@ -104,7 +104,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: uv sync --frozen
+      - run: uv sync --frozen --extra dev
 
       - name: Ruff lint
         id: ruff-lint
@@ -196,11 +196,14 @@ jobs:
       - name: Comment if rebase needed
         if: steps.rebase.outputs.behind_count != '0' || steps.rebase.outputs.merge_commits != ''
         uses: actions/github-script@v7
+        env:
+          BEHIND_COUNT: ${{ steps.rebase.outputs.behind_count }}
+          MERGE_COMMITS: ${{ steps.rebase.outputs.merge_commits }}
         with:
           script: |
             const marker = '<!-- rebase-bot -->';
-            const behind = parseInt('${{ steps.rebase.outputs.behind_count }}');
-            const mergeCommits = `${{ steps.rebase.outputs.merge_commits }}`.trim();
+            const behind = parseInt(process.env.BEHIND_COUNT);
+            const mergeCommits = (process.env.MERGE_COMMITS || '').trim();
 
             let body = marker + '\n## Rebase Required\n\n';
             if (behind > 0) {
