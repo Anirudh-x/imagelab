@@ -48,7 +48,7 @@ def compute_image_stats(image: np.ndarray) -> ImageStats:
     # Compute min/max/mean without an extra full-size float32 copy
     img_min = float(image.min())
     img_max = float(image.max())
-    img_mean = round(float(image.astype(np.float64).mean()), 2)
+    img_mean = round(float(image.mean(dtype=np.float64)), 2)
 
     return ImageStats(
         width=width,
