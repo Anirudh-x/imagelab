@@ -64,7 +64,15 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   setShowStepPreviews: (show) => set({ showStepPreviews: show }),
   setSelectedStepIndex: (index) => set({ selectedStepIndex: index }),
   setOriginalImage: (image, format) =>
-    set({ originalImage: image, imageFormat: format, processedImage: null, error: null, intermediates: [], selectedStepIndex: null }),
+    set({
+      originalImage: image,
+      imageFormat: format,
+      processedImage: null,
+      error: null,
+      errorStep: null,
+      intermediates: [],
+      selectedStepIndex: null,
+    }),
   setProcessedImage: (image) => set({ processedImage: image, error: null, errorStep: null }),
   setExecuting: (executing) => set({ isExecuting: executing }),
   setError: (error, step = null) => set({ error, errorStep: step }),
