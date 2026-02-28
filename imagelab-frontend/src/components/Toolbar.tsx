@@ -127,7 +127,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
         onClick={handleRun}
         disabled={isExecuting || !originalImage}
         className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        title="Run Pipeline"
+        title={`Run Pipeline (${mod}Enter)`}
       >
         {isExecuting ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
         {isExecuting ? "Running..." : "Run"}
