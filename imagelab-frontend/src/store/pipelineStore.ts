@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import * as Blockly from 'blockly';
-import { categories } from '../blocks/categories';
+import { create } from "zustand";
+import * as Blockly from "blockly";
+import { categories } from "../blocks/categories";
 
 interface PipelineState {
   originalImage: string | null;
@@ -16,7 +16,7 @@ interface PipelineState {
   blockCount: number;
   uniqueBlockTypes: number;
   categoryCounts: Record<string, number>;
-  complexity: 'Low' | 'Medium' | 'High';
+  complexity: "Low" | "Medium" | "High";
   setOriginalImage: (image: string, format: string) => void;
   setProcessedImage: (image: string | null) => void;
   setExecuting: (executing: boolean) => void;
@@ -29,16 +29,16 @@ interface PipelineState {
   registerImageReset: (fn: () => void) => void;
 }
 
-function calculateComplexity(blocks: number, unique: number): 'Low' | 'Medium' | 'High' {
-  if (blocks === 0) return 'Low';
-  if (blocks > 10 || unique > 5) return 'High';
-  if (blocks > 3 || unique > 2) return 'Medium';
-  return 'Low';
+function calculateComplexity(blocks: number, unique: number): "Low" | "Medium" | "High" {
+  if (blocks === 0) return "Low";
+  if (blocks > 10 || unique > 5) return "High";
+  if (blocks > 3 || unique > 2) return "Medium";
+  return "Low";
 }
 
 export const usePipelineStore = create<PipelineState>((set) => ({
   originalImage: null,
-  imageFormat: 'png',
+  imageFormat: "png",
   processedImage: null,
   isExecuting: false,
   error: null,
@@ -48,12 +48,14 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   blockCount: 0,
   uniqueBlockTypes: 0,
   categoryCounts: {},
-  complexity: 'Low',
-  setOriginalImage: (image, format) => set({ originalImage: image, imageFormat: format, processedImage: null, error: null }),
+  complexity: "Low",
+  setOriginalImage: (image, format) =>
+    set({ originalImage: image, imageFormat: format, processedImage: null, error: null }),
   setProcessedImage: (image) => set({ processedImage: image, error: null, errorStep: null }),
   setExecuting: (executing) => set({ isExecuting: executing }),
   setError: (error, step = null) => set({ error, errorStep: step }),
-  setSelectedBlock: (type, tooltip) => set({ selectedBlockType: type, selectedBlockTooltip: tooltip }),
+  setSelectedBlock: (type, tooltip) =>
+    set({ selectedBlockType: type, selectedBlockTooltip: tooltip }),
   _imageResetFn: null as (() => void) | null,
   registerImageReset: (fn) => set({ _imageResetFn: fn }),
   clearImage: () => {
@@ -65,8 +67,8 @@ export const usePipelineStore = create<PipelineState>((set) => ({
     const blocks = workspace.getAllBlocks(false);
 
     const typeToCategory: Record<string, string> = {};
-    categories.forEach(cat => {
-      cat.blocks.forEach(b => {
+    categories.forEach((cat) => {
+      cat.blocks.forEach((b) => {
         typeToCategory[b.type] = cat.name;
       });
     });
@@ -74,9 +76,9 @@ export const usePipelineStore = create<PipelineState>((set) => ({
     const uniqueTypes = new Set<string>();
     const counts: Record<string, number> = {};
 
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       uniqueTypes.add(block.type);
-      const cat = typeToCategory[block.type] || 'Unknown';
+      const cat = typeToCategory[block.type] || "Unknown";
       counts[cat] = (counts[cat] || 0) + 1;
     });
 
@@ -84,21 +86,22 @@ export const usePipelineStore = create<PipelineState>((set) => ({
       blockCount: blocks.length,
       uniqueBlockTypes: uniqueTypes.size,
       categoryCounts: counts,
-      complexity: calculateComplexity(blocks.length, uniqueTypes.size)
+      complexity: calculateComplexity(blocks.length, uniqueTypes.size),
     });
   },
-  reset: () => set({
-    originalImage: null,
-    imageFormat: 'png',
-    processedImage: null,
-    isExecuting: false,
-    error: null,
-    errorStep: null,
-    selectedBlockType: null,
-    selectedBlockTooltip: null,
-    blockCount: 0,
-    uniqueBlockTypes: 0,
-    categoryCounts: {},
-    complexity: 'Low'
-  }),
+  reset: () =>
+    set({
+      originalImage: null,
+      imageFormat: "png",
+      processedImage: null,
+      isExecuting: false,
+      error: null,
+      errorStep: null,
+      selectedBlockType: null,
+      selectedBlockTooltip: null,
+      blockCount: 0,
+      uniqueBlockTypes: 0,
+      categoryCounts: {},
+      complexity: "Low",
+    }),
 }));

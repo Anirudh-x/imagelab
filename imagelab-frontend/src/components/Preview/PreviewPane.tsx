@@ -35,7 +35,8 @@ function ZoomControls({
 }
 
 export default function PreviewPane() {
-  const { originalImage, imageFormat, processedImage, error, errorStep, clearImage } = usePipelineStore();
+  const { originalImage, imageFormat, processedImage, error, errorStep, clearImage } =
+    usePipelineStore();
   const [originalZoom, setOriginalZoom] = useState<number | null>(null);
   const [processedZoom, setProcessedZoom] = useState<number | null>(null);
 

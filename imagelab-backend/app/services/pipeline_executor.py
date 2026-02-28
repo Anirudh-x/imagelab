@@ -36,7 +36,8 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
     try:
         encoded = encode_image_base64(image, request.image_format)
     except Exception as e:
-        return PipelineResponse(success=False, error=f"Failed to encode result: {type(e).__name__}: {e}", step=len(request.pipeline))
+        error_msg = f"Failed to encode result: {type(e).__name__}: {e}"
+        return PipelineResponse(success=False, error=error_msg, step=len(request.pipeline))
 
     return PipelineResponse(
         success=True,

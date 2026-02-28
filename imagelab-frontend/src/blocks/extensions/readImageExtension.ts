@@ -38,7 +38,7 @@ function initReadImageBlock(block: Blockly.Block) {
       fileInput.click();
     });
   }
-  
+
   // Register a reset callback when the image is cleared
   usePipelineStore.getState().registerImageReset(() => {
     const label = block.getField("filename_label");

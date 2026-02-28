@@ -1,5 +1,5 @@
-import { Info } from 'lucide-react';
-import { usePipelineStore } from '../store/pipelineStore';
+import { Info } from "lucide-react";
+import { usePipelineStore } from "../store/pipelineStore";
 
 export default function InfoPane() {
   const selectedBlockType = usePipelineStore((s) => s.selectedBlockType);

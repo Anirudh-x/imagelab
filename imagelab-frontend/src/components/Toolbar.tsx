@@ -11,8 +11,7 @@ interface ToolbarProps {
 
 // Detect macOS to show Cmd vs Ctrl in tooltips
 const isMac =
-  typeof navigator !== "undefined" &&
-  /mac/i.test(navigator.platform || navigator.userAgent);
+  typeof navigator !== "undefined" && /mac/i.test(navigator.platform || navigator.userAgent);
 const mod = isMac ? "⌘" : "Ctrl+";
 
 export default function Toolbar({ workspace }: ToolbarProps) {
@@ -32,9 +31,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
   } = usePipelineStore();
 
   const handleNew = () => {
-    if (
-      !window.confirm("This will clear all blocks and the uploaded image. Continue?")
-    ) {
+    if (!window.confirm("This will clear all blocks and the uploaded image. Continue?")) {
       return;
     }
     reset();
@@ -138,10 +135,18 @@ export default function Toolbar({ workspace }: ToolbarProps) {
       {blockCount > 0 && (
         <div className="relative group cursor-help px-2 flex items-center h-full border-l border-gray-100 ml-2">
           <div className="flex flex-col items-end leading-tight">
-            <span className="font-semibold text-xs text-gray-700">{blockCount} {blockCount === 1 ? 'block' : 'blocks'}</span>
-            <span className={`text-[10px] uppercase font-bold tracking-wide ${complexity === 'High' ? 'text-red-500' :
-                complexity === 'Medium' ? 'text-orange-500' : 'text-green-500'
-              }`}>
+            <span className="font-semibold text-xs text-gray-700">
+              {blockCount} {blockCount === 1 ? "block" : "blocks"}
+            </span>
+            <span
+              className={`text-[10px] uppercase font-bold tracking-wide ${
+                complexity === "High"
+                  ? "text-red-500"
+                  : complexity === "Medium"
+                    ? "text-orange-500"
+                    : "text-green-500"
+              }`}
+            >
               {complexity} Complexity
             </span>
           </div>
@@ -151,16 +156,25 @@ export default function Toolbar({ workspace }: ToolbarProps) {
               Block Breakdown
             </div>
             <div className="space-y-1.5">
-              {Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]).map(([cat, count]) => (
-                <div key={cat} className="flex justify-between items-center text-xs text-gray-600">
-                  <span className="truncate pr-2">{cat}</span>
-                  <span className="font-medium bg-gray-100 px-1.5 py-0.5 rounded text-[10px]">{count}</span>
-                </div>
-              ))}
+              {Object.entries(categoryCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([cat, count]) => (
+                  <div
+                    key={cat}
+                    className="flex justify-between items-center text-xs text-gray-600"
+                  >
+                    <span className="truncate pr-2">{cat}</span>
+                    <span className="font-medium bg-gray-100 px-1.5 py-0.5 rounded text-[10px]">
+                      {count}
+                    </span>
+                  </div>
+                ))}
             </div>
             <div className="mt-2.5 pt-2 border-t border-gray-100 flex justify-between items-center text-gray-500 text-[10px] uppercase">
               <span>Unique Types</span>
-              <span className="font-bold text-gray-700 bg-gray-100 px-1.5 py-0.5 rounded">{uniqueBlockTypes}</span>
+              <span className="font-bold text-gray-700 bg-gray-100 px-1.5 py-0.5 rounded">
+                {uniqueBlockTypes}
+              </span>
             </div>
           </div>
         </div>

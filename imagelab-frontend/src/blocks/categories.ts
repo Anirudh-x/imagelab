@@ -17,8 +17,8 @@ export const categories: CategoryInfo[] = [
     colour: "#81C784",
     blocks: [
       { type: "basic_readimage", label: "Read Image" },
-      { type: "basic_writeimage", label: "Write Image" }
-    ]
+      { type: "basic_writeimage", label: "Write Image" },
+    ],
   },
   {
     name: "Geometric",
@@ -29,8 +29,8 @@ export const categories: CategoryInfo[] = [
       { type: "geometric_cropimage", label: "Crop Image" },
       { type: "geometric_rotateimage", label: "Rotate Image" },
       { type: "geometric_affineimage", label: "Affine Transform" },
-      { type: "geometric_scaleimage", label: "Scale Image" }
-    ]
+      { type: "geometric_scaleimage", label: "Scale Image" },
+    ],
   },
   {
     name: "Conversions",
@@ -47,8 +47,8 @@ export const categories: CategoryInfo[] = [
       { type: "imageconvertions_bgrtolab", label: "BGR to LAB" },
       { type: "imageconvertions_labtobgr", label: "LAB to BGR" },
       { type: "imageconvertions_bgrtoycrcb", label: "BGR to YCrCb" },
-      { type: "imageconvertions_ycrcbtobgr", label: "YCrCb to BGR" }
-    ]
+      { type: "imageconvertions_ycrcbtobgr", label: "YCrCb to BGR" },
+    ],
   },
   {
     name: "Drawing",
@@ -60,8 +60,8 @@ export const categories: CategoryInfo[] = [
       { type: "drawingoperations_drawarrowline", label: "Draw Arrow Line" },
       { type: "drawingoperations_drawtext", label: "Draw Text" },
       { type: "drawingoperations_drawcircle", label: "Draw Circle" },
-      { type: "drawingoperations_drawrectangle", label: "Draw Rectangle" }
-    ]
+      { type: "drawingoperations_drawrectangle", label: "Draw Rectangle" },
+    ],
   },
   {
     name: "Blurring",
@@ -70,8 +70,8 @@ export const categories: CategoryInfo[] = [
     blocks: [
       { type: "blurring_applyblur", label: "Apply Blur" },
       { type: "blurring_applygaussianblur", label: "Gaussian Blur" },
-      { type: "blurring_applymedianblur", label: "Median Blur" }
-    ]
+      { type: "blurring_applymedianblur", label: "Median Blur" },
+    ],
   },
   {
     name: "Filtering",
@@ -85,8 +85,8 @@ export const categories: CategoryInfo[] = [
       { type: "filtering_pyramiddown", label: "Pyramid Down" },
       { type: "filtering_erosion", label: "Erosion" },
       { type: "filtering_dilation", label: "Dilation" },
-      { type: "filtering_morphological", label: "Morphological" }
-    ]
+      { type: "filtering_morphological", label: "Morphological" },
+    ],
   },
   {
     name: "Thresholding",
@@ -99,7 +99,7 @@ export const categories: CategoryInfo[] = [
       { type: "border_for_all", label: "Border (All Sides)" },
       { type: "border_each_side", label: "Border (Each Side)" },
       { type: "thresholding_otsuthreshold", label: "Otsu Threshold" },
-    ]
+    ],
   },
   {
     name: "Sobel Derivatives",
@@ -107,8 +107,8 @@ export const categories: CategoryInfo[] = [
     colour: "#E57373",
     blocks: [
       { type: "sobelderivatives_soblederivate", label: "Sobel Derivative" },
-      { type: "sobelderivatives_scharrderivate", label: "Scharr Derivative" }
-    ]
+      { type: "sobelderivatives_scharrderivate", label: "Scharr Derivative" },
+    ],
   },
   {
     name: "Transformation",
@@ -116,7 +116,7 @@ export const categories: CategoryInfo[] = [
     colour: "#4DB6AC",
     blocks: [
       { type: "transformation_distance", label: "Distance Transform" },
-      { type: "transformation_laplacian", label: "Laplacian" }
-    ]
-  }
+      { type: "transformation_laplacian", label: "Laplacian" },
+    ],
+  },
 ];

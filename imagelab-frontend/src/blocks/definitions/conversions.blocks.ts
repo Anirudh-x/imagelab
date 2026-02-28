@@ -5,7 +5,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts the image to grayscale"
+    tooltip: "Converts the image to grayscale",
   },
   {
     type: "imageconvertions_channelsplit",
@@ -17,14 +17,14 @@ export const conversionsBlocks = [
         options: [
           ["Red", "RED"],
           ["Green", "GREEN"],
-          ["Blue", "BLUE"]
-        ]
-      }
+          ["Blue", "BLUE"],
+        ],
+      },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Splits a multi-channel image and extracts the selected channel as grayscale"
+    tooltip: "Splits a multi-channel image and extracts the selected channel as grayscale",
   },
   {
     type: "imageconvertions_graytobinary",
@@ -32,12 +32,13 @@ export const conversionsBlocks = [
     args0: [
       { type: "input_dummy" },
       { type: "field_number", name: "thresholdValue", value: 0, min: 0 },
-      { type: "field_number", name: "maxValue", value: 0, min: 0 }
+      { type: "field_number", name: "maxValue", value: 0, min: 0 },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts grayscale to binary using threshold - Applies a binary threshold to a grayscale image, converting it to black and white. Pixels with intensity above the threshold value will be set to the max value (white), while those below will be set to 0 (black). This is useful for segmenting objects from the background."
+    tooltip:
+      "Converts grayscale to binary using threshold - Applies a binary threshold to a grayscale image, converting it to black and white. Pixels with intensity above the threshold value will be set to the max value (white), while those below will be set to 0 (black). This is useful for segmenting objects from the background.",
   },
   {
     type: "imageconvertions_colormaps",
@@ -63,11 +64,13 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Apply different color maps to an image - Transforms the colors of an image using various color maps. This can enhance visual contrast and highlight specific features. For example, the 'JET' colormap transitions from blue to red, while 'HSV' represents hue, saturation, and value. Choose a colormap that best suits your image analysis needs.",
+    tooltip:
+      "Apply different color maps to an image - Transforms the colors of an image using various color maps. This can enhance visual contrast and highlight specific features. For example, the 'JET' colormap transitions from blue to red, while 'HSV' represents hue, saturation, and value. Choose a colormap that best suits your image analysis needs.",
   },
   {
     type: "imageconvertions_colortobinary",
-    message0: "Convert colored image to a binary one %1 by %2 type %3 with threshold value %4 and max value %5",
+    message0:
+      "Convert colored image to a binary one %1 by %2 type %3 with threshold value %4 and max value %5",
     args0: [
       { type: "input_dummy" },
       {
@@ -86,7 +89,8 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Convert colored (RGB) image to binary with adjustable threshold - Applies a binary threshold to a colored image, converting it to black and white. You can choose between 'Threshold Binary' (pixels above the threshold become white) and 'Threshold Binary Inv' (pixels above the threshold become black). Adjust the threshold value to control which pixels are considered foreground (white) or background (black), and set the max value for the output binary image.",
+    tooltip:
+      "Convert colored (RGB) image to binary with adjustable threshold - Applies a binary threshold to a colored image, converting it to black and white. You can choose between 'Threshold Binary' (pixels above the threshold become white) and 'Threshold Binary Inv' (pixels above the threshold become black). Adjust the threshold value to control which pixels are considered foreground (white) or background (black), and set the max value for the output binary image.",
   },
   {
     type: "imageconvertions_bgrtohsv",
@@ -94,7 +98,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts an image from BGR to HSV color space (separates color from brightness)."
+    tooltip: "Converts an image from BGR to HSV color space (separates color from brightness).",
   },
   {
     type: "imageconvertions_hsvtobgr",
@@ -102,7 +106,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts an image from HSV back to BGR color space."
+    tooltip: "Converts an image from HSV back to BGR color space.",
   },
   {
     type: "imageconvertions_bgrtolab",
@@ -110,7 +114,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts BGR to LAB color space (approximates human vision)."
+    tooltip: "Converts BGR to LAB color space (approximates human vision).",
   },
   {
     type: "imageconvertions_labtobgr",
@@ -118,7 +122,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts LAB back to BGR color space."
+    tooltip: "Converts LAB back to BGR color space.",
   },
   {
     type: "imageconvertions_bgrtoycrcb",
@@ -126,7 +130,7 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts BGR to YCrCb color space (separates luma from chroma)."
+    tooltip: "Converts BGR to YCrCb color space (separates luma from chroma).",
   },
   {
     type: "imageconvertions_ycrcbtobgr",
@@ -134,6 +138,6 @@ export const conversionsBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "conversions_style",
-    tooltip: "Converts YCrCb back to BGR color space."
-  }
+    tooltip: "Converts YCrCb back to BGR color space.",
+  },
 ];

@@ -8,12 +8,13 @@ export const filteringBlocks = [
       { type: "input_dummy" },
       { type: "field_number", name: "sigmaColor", value: 75, min: 0 },
       { type: "input_dummy" },
-      { type: "field_number", name: "sigmaSpace", value: 75, min: 0 }
+      { type: "field_number", name: "sigmaSpace", value: 75, min: 0 },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies bilateral filter - A non-linear, edge-preserving, and noise-reducing smoothing filter. It averages pixels based on both their spatial proximity and their intensity similarity, making it effective at reducing noise while keeping edges sharp. The 'filterSize' controls the size of the neighborhood, while 'sigmaColor' and 'sigmaSpace' adjust the degree of filtering based on color and spatial distance, respectively."
+    tooltip:
+      "Applies bilateral filter - A non-linear, edge-preserving, and noise-reducing smoothing filter. It averages pixels based on both their spatial proximity and their intensity similarity, making it effective at reducing noise while keeping edges sharp. The 'filterSize' controls the size of the neighborhood, while 'sigmaColor' and 'sigmaSpace' adjust the degree of filtering based on color and spatial distance, respectively.",
   },
   {
     type: "filtering_boxfilter",
@@ -24,12 +25,13 @@ export const filteringBlocks = [
       { type: "field_number", name: "height", value: 50, min: 0 },
       { type: "field_number", name: "depth", value: 5, min: 0 },
       { type: "field_number", name: "point_x", value: -1 },
-      { type: "field_number", name: "point_y", value: -1 }
+      { type: "field_number", name: "point_y", value: -1 },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies box filter - A simple linear filter that replaces each pixel with the average of its neighbors defined by the width and height. The 'depth' parameter controls the number of times the filter is applied, increasing the blurring effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center."
+    tooltip:
+      "Applies box filter - A simple linear filter that replaces each pixel with the average of its neighbors defined by the width and height. The 'depth' parameter controls the number of times the filter is applied, increasing the blurring effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center.",
   },
   {
     type: "filtering_pyramidup",
@@ -37,7 +39,8 @@ export const filteringBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Upsamples the image by 2x - Increases the size of the image by a factor of 2 using Gaussian pyramid. This is useful for creating a smoother, higher-resolution version of the image, often used in multi-scale processing or to prepare an image for further analysis."
+    tooltip:
+      "Upsamples the image by 2x - Increases the size of the image by a factor of 2 using Gaussian pyramid. This is useful for creating a smoother, higher-resolution version of the image, often used in multi-scale processing or to prepare an image for further analysis.",
   },
   {
     type: "filtering_pyramiddown",
@@ -45,7 +48,8 @@ export const filteringBlocks = [
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Downsamples the image by 2x - Reduces the size of the image by a factor of 2 using Gaussian pyramid. This is useful for creating a smaller, lower-resolution version of the image, often used in multi-scale processing or to reduce computational load for further analysis."
+    tooltip:
+      "Downsamples the image by 2x - Reduces the size of the image by a factor of 2 using Gaussian pyramid. This is useful for creating a smaller, lower-resolution version of the image, often used in multi-scale processing or to reduce computational load for further analysis.",
   },
   {
     type: "filtering_erosion",
@@ -54,12 +58,13 @@ export const filteringBlocks = [
       { type: "field_number", name: "iteration", value: 1, min: 0 },
       { type: "input_dummy" },
       { type: "field_number", name: "point_x", value: -1 },
-      { type: "field_number", name: "point_y", value: -1 }
+      { type: "field_number", name: "point_y", value: -1 },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies erosion to the image - A morphological operation that erodes away the boundaries of foreground objects. It works by replacing each pixel with the minimum value of its neighbors defined by the structuring element. The 'iteration' parameter controls how many times the erosion is applied, increasing the effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center."
+    tooltip:
+      "Applies erosion to the image - A morphological operation that erodes away the boundaries of foreground objects. It works by replacing each pixel with the minimum value of its neighbors defined by the structuring element. The 'iteration' parameter controls how many times the erosion is applied, increasing the effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center.",
   },
   {
     type: "filtering_dilation",
@@ -68,12 +73,13 @@ export const filteringBlocks = [
       { type: "field_number", name: "iteration", value: 1, min: 0 },
       { type: "input_dummy" },
       { type: "field_number", name: "point_x", value: -1 },
-      { type: "field_number", name: "point_y", value: -1 }
+      { type: "field_number", name: "point_y", value: -1 },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies dilation to the image - A morphological operation that expands the boundaries of foreground objects. It works by replacing each pixel with the maximum value of its neighbors defined by the structuring element. The 'iteration' parameter controls how many times the dilation is applied, increasing the effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center."
+    tooltip:
+      "Applies dilation to the image - A morphological operation that expands the boundaries of foreground objects. It works by replacing each pixel with the maximum value of its neighbors defined by the structuring element. The 'iteration' parameter controls how many times the dilation is applied, increasing the effect. The anchor point (x, y) sets the filter center; use (-1, -1) to auto-center.",
   },
   {
     type: "filtering_morphological",
@@ -87,23 +93,23 @@ export const filteringBlocks = [
           ["Close", "CLOSE"],
           ["Gradient", "GRADIENT"],
           ["Black hat", "BLACKHAT"],
-          ["Open", "OPEN"]
-        ]
-      }
+          ["Open", "OPEN"],
+        ],
+      },
     ],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies morphological operation - Performs various morphological transformations based on the selected filter type. 'Open' removes small objects from the foreground, 'Close' fills small holes in the foreground, 'Gradient' highlights the edges of objects, 'Tophat' extracts small elements and details from the image, and 'Black hat' extracts small dark regions on a light background. These operations are useful for enhancing or suppressing specific features in an image."
-  },{
+    tooltip:
+      "Applies morphological operation - Performs various morphological transformations based on the selected filter type. 'Open' removes small objects from the foreground, 'Close' fills small holes in the foreground, 'Gradient' highlights the edges of objects, 'Tophat' extracts small elements and details from the image, and 'Black hat' extracts small dark regions on a light background. These operations are useful for enhancing or suppressing specific features in an image.",
+  },
+  {
     type: "filtering_sharpen",
     message0: "Apply sharpen with strength %1",
-    args0: [
-      { type: "field_number", name: "strength", value: 1.0, min: 0, max: 2, precision: 0.1 }
-    ],
+    args0: [{ type: "field_number", name: "strength", value: 1.0, min: 0, max: 2, precision: 0.1 }],
     previousStatement: null,
     nextStatement: null,
     style: "filtering_style",
-    tooltip: "Applies image sharpening to enhance edges and details"
-  }
+    tooltip: "Applies image sharpening to enhance edges and details",
+  },
 ];
