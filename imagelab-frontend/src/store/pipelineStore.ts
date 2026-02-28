@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import * as Blockly from "blockly";
 import { categories } from "../blocks/categories";
+import type { StepResult } from "../types/pipeline";
 
 interface PipelineState {
   originalImage: string | null;
@@ -11,6 +12,13 @@ interface PipelineState {
   errorStep: number | null;
   selectedBlockType: string | null;
   selectedBlockTooltip: string | null;
+  // Step-by-step preview state
+  intermediates: StepResult[];
+  showStepPreviews: boolean;
+  selectedStepIndex: number | null;
+  setIntermediates: (steps: StepResult[]) => void;
+  setShowStepPreviews: (show: boolean) => void;
+  setSelectedStepIndex: (index: number | null) => void;
 
   // Statistics
   blockCount: number;
@@ -45,12 +53,18 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   errorStep: null,
   selectedBlockType: null,
   selectedBlockTooltip: null,
+  intermediates: [],
+  showStepPreviews: false,
+  selectedStepIndex: null,
   blockCount: 0,
   uniqueBlockTypes: 0,
   categoryCounts: {},
   complexity: "Low",
+  setIntermediates: (steps) => set({ intermediates: steps }),
+  setShowStepPreviews: (show) => set({ showStepPreviews: show }),
+  setSelectedStepIndex: (index) => set({ selectedStepIndex: index }),
   setOriginalImage: (image, format) =>
-    set({ originalImage: image, imageFormat: format, processedImage: null, error: null }),
+    set({ originalImage: image, imageFormat: format, processedImage: null, error: null, intermediates: [], selectedStepIndex: null }),
   setProcessedImage: (image) => set({ processedImage: image, error: null, errorStep: null }),
   setExecuting: (executing) => set({ isExecuting: executing }),
   setError: (error, step = null) => set({ error, errorStep: step }),
@@ -61,7 +75,7 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   clearImage: () => {
     const state = usePipelineStore.getState();
     if (state._imageResetFn) state._imageResetFn();
-    set({ originalImage: null, processedImage: null, error: null, errorStep: null });
+    set({ originalImage: null, processedImage: null, error: null, errorStep: null, intermediates: [], selectedStepIndex: null });
   },
   updateBlockStats: (workspace) => {
     const blocks = workspace.getAllBlocks(false);
@@ -99,6 +113,9 @@ export const usePipelineStore = create<PipelineState>((set) => ({
       errorStep: null,
       selectedBlockType: null,
       selectedBlockTooltip: null,
+      intermediates: [],
+      showStepPreviews: false,
+      selectedStepIndex: null,
       blockCount: 0,
       uniqueBlockTypes: 0,
       categoryCounts: {},

@@ -1,6 +1,6 @@
-from app.models.pipeline import PipelineRequest, PipelineResponse
+from app.models.pipeline import PipelineRequest, PipelineResponse, StepResult
 from app.operators.registry import get_operator
-from app.utils.image import decode_base64_image, encode_image_base64
+from app.utils.image import compute_image_stats, decode_base64_image, encode_image_base64
 
 NOOP_TYPES = {"basic_readimage", "basic_writeimage", "border_for_all", "border_each_side"}
 
@@ -10,6 +10,8 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
         image = decode_base64_image(request.image)
     except Exception as e:
         return PipelineResponse(success=False, error=f"Failed to decode image: {e}", step=0)
+
+    intermediates: list[StepResult] = []
 
     for i, step in enumerate(request.pipeline):
         if step.type in NOOP_TYPES:
@@ -33,6 +35,23 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
                 step=i,
             )
 
+        if request.include_intermediates:
+            try:
+                encoded = encode_image_base64(image, request.image_format)
+                stats = compute_image_stats(image)
+                intermediates.append(
+                    StepResult(
+                        step=i,
+                        operator=step.type,
+                        image=encoded,
+                        image_format=request.image_format,
+                        stats=stats,
+                    )
+                )
+            except Exception:
+                # Non-fatal: skip capturing this step's intermediate
+                pass
+
     try:
         encoded = encode_image_base64(image, request.image_format)
     except Exception as e:
@@ -43,4 +62,5 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
         success=True,
         image=encoded,
         image_format=request.image_format,
+        intermediates=intermediates if request.include_intermediates else None,
     )

@@ -1,5 +1,5 @@
 import * as Blockly from "blockly";
-import { FilePlus, Download, Undo2, Redo2, Play, Loader2 } from "lucide-react";
+import { FilePlus, Download, Undo2, Redo2, Play, Loader2, Layers } from "lucide-react";
 import { usePipelineStore } from "../store/pipelineStore";
 import { executePipeline } from "../api/pipeline";
 import { extractPipeline } from "../hooks/usePipeline";
@@ -28,6 +28,9 @@ export default function Toolbar({ workspace }: ToolbarProps) {
     uniqueBlockTypes,
     categoryCounts,
     complexity,
+    showStepPreviews,
+    setShowStepPreviews,
+    setIntermediates,
   } = usePipelineStore();
 
   const handleNew = () => {
@@ -66,10 +69,14 @@ export default function Toolbar({ workspace }: ToolbarProps) {
         image: originalImage,
         image_format: imageFormat,
         pipeline,
+        include_intermediates: showStepPreviews,
       });
 
       if (response.success && response.image) {
         setProcessedImage(response.image);
+        if (showStepPreviews && response.intermediates) {
+          setIntermediates(response.intermediates);
+        }
       } else {
         setError(response.error || "Pipeline execution failed", response.step);
       }
@@ -118,6 +125,21 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
       <div className={separator} />
 
+      {/* Step Preview toggle */}
+      <button
+        onClick={() => setShowStepPreviews(!showStepPreviews)}
+        className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border transition-colors ${showStepPreviews
+            ? "bg-indigo-50 border-indigo-300 text-indigo-600"
+            : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+          }`}
+        title="Toggle per-step intermediate previews"
+      >
+        <Layers size={13} />
+        Step Preview
+      </button>
+
+      <div className={separator} />
+
       <button
         onClick={handleRun}
         disabled={isExecuting || !originalImage}
@@ -139,13 +161,12 @@ export default function Toolbar({ workspace }: ToolbarProps) {
               {blockCount} {blockCount === 1 ? "block" : "blocks"}
             </span>
             <span
-              className={`text-[10px] uppercase font-bold tracking-wide ${
-                complexity === "High"
+              className={`text-[10px] uppercase font-bold tracking-wide ${complexity === "High"
                   ? "text-red-500"
                   : complexity === "Medium"
                     ? "text-orange-500"
                     : "text-green-500"
-              }`}
+                }`}
             >
               {complexity} Complexity
             </span>
