@@ -60,7 +60,7 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   uniqueBlockTypes: 0,
   categoryCounts: {},
   complexity: "Low",
-  setIntermediates: (steps) => set({ intermediates: steps }),
+  setIntermediates: (steps) => set({ intermediates: steps, selectedStepIndex: null }),
   setShowStepPreviews: (show) => set({ showStepPreviews: show }),
   setSelectedStepIndex: (index) => set({ selectedStepIndex: index }),
   setOriginalImage: (image, format) =>
