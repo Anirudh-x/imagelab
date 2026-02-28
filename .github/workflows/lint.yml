@@ -5,16 +5,9 @@ on:
     branches: [main]
   push:
     branches: [main]
-  issue_comment:
-    types: [created]
 
 concurrency:
-  group: >-
-    lint-${{
-      github.event_name == 'issue_comment'
-        && format('pr-{0}', github.event.issue.number)
-        || github.ref
-    }}
+  group: lint-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -24,21 +17,12 @@ permissions:
 jobs:
   frontend-lint:
     name: Frontend Lint
-    if: >-
-      github.event_name != 'issue_comment'
-      || (
-        github.event.issue.pull_request
-        && contains(github.event.comment.body, '/lint')
-        && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
-      )
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: imagelab-frontend
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || '' }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -57,8 +41,7 @@ jobs:
         run: npx prettier --check "src/**/*.{ts,tsx,js,jsx,json,css}"
 
       - name: Comment on PR
-        if: github.event_name != 'push' && (steps.eslint.outcome == 'failure' || steps.prettier.outcome == 'failure')
-        continue-on-error: true
+        if: github.event_name == 'pull_request' && (steps.eslint.outcome == 'failure' || steps.prettier.outcome == 'failure')
         uses: actions/github-script@v7
         with:
           script: |
@@ -88,8 +71,7 @@ jobs:
             }
 
       - name: Delete stale comment
-        if: github.event_name != 'push' && steps.eslint.outcome == 'success' && steps.prettier.outcome == 'success'
-        continue-on-error: true
+        if: github.event_name == 'pull_request' && steps.eslint.outcome == 'success' && steps.prettier.outcome == 'success'
         uses: actions/github-script@v7
         with:
           script: |
@@ -112,26 +94,17 @@ jobs:
 
   backend-lint:
     name: Backend Lint
-    if: >-
-      github.event_name != 'issue_comment'
-      || (
-        github.event.issue.pull_request
-        && contains(github.event.comment.body, '/lint')
-        && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
-      )
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: imagelab-backend
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || '' }}
       - uses: astral-sh/setup-uv@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: uv sync --frozen --extra dev
+      - run: uv sync --frozen
 
       - name: Ruff lint
         id: ruff-lint
@@ -144,8 +117,7 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Comment on PR
-        if: github.event_name != 'push' && (steps.ruff-lint.outcome == 'failure' || steps.ruff-format.outcome == 'failure')
-        continue-on-error: true
+        if: github.event_name == 'pull_request' && (steps.ruff-lint.outcome == 'failure' || steps.ruff-format.outcome == 'failure')
         uses: actions/github-script@v7
         with:
           script: |
@@ -175,8 +147,7 @@ jobs:
             }
 
       - name: Delete stale comment
-        if: github.event_name != 'push' && steps.ruff-lint.outcome == 'success' && steps.ruff-format.outcome == 'success'
-        continue-on-error: true
+        if: github.event_name == 'pull_request' && steps.ruff-lint.outcome == 'success' && steps.ruff-format.outcome == 'success'
         uses: actions/github-script@v7
         with:
           script: |
@@ -199,20 +170,12 @@ jobs:
 
   rebase-check:
     name: Rebase Check
-    if: >-
-      github.event_name == 'pull_request'
-      || (
-        github.event_name == 'issue_comment'
-        && github.event.issue.pull_request
-        && contains(github.event.comment.body, '/lint')
-        && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
-      )
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || '' }}
 
       - name: Check rebase status
         id: rebase
@@ -232,16 +195,12 @@ jobs:
 
       - name: Comment if rebase needed
         if: steps.rebase.outputs.behind_count != '0' || steps.rebase.outputs.merge_commits != ''
-        continue-on-error: true
         uses: actions/github-script@v7
-        env:
-          BEHIND_COUNT: ${{ steps.rebase.outputs.behind_count }}
-          MERGE_COMMITS: ${{ steps.rebase.outputs.merge_commits }}
         with:
           script: |
             const marker = '<!-- rebase-bot -->';
-            const behind = parseInt(process.env.BEHIND_COUNT);
-            const mergeCommits = (process.env.MERGE_COMMITS || '').trim();
+            const behind = parseInt('${{ steps.rebase.outputs.behind_count }}');
+            const mergeCommits = `${{ steps.rebase.outputs.merge_commits }}`.trim();
 
             let body = marker + '\n## Rebase Required\n\n';
             if (behind > 0) {
@@ -272,7 +231,6 @@ jobs:
 
       - name: Delete stale comment
         if: steps.rebase.outputs.behind_count == '0' && steps.rebase.outputs.merge_commits == ''
-        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
