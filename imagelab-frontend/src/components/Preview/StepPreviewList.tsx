@@ -4,15 +4,15 @@ import HistogramCanvas from "./HistogramCanvas";
 import type { StepResult } from "../../types/pipeline";
 
 /** Convert an internal operator type string like "blurring_applygaussianblur" to
- *  a readable label "Apply Gaussian Blur". */
+ *  a simpler display label by dropping the category prefix (e.g. "applygaussianblur"). */
 function operatorLabel(type: string): string {
-  const parts = type.split("_");
-  // Remove the category prefix, title-case each word of the remainder
-  const name = parts.slice(1).join(" ");
-  return name
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-    .trim() || type;
+  const underscoreIndex = type.indexOf("_");
+  if (underscoreIndex === -1) {
+    return type;
+  }
+  const name = type.slice(underscoreIndex + 1).trim();
+  return name || type;
+}
 }
 
 /** One card in the step list. */
