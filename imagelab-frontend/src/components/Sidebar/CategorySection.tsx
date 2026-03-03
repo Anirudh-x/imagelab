@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import * as Blockly from "blockly";
 import {
   ChevronRight,
@@ -50,9 +50,12 @@ export default function CategorySection({
   const Icon = iconMap[category.icon];
 
   const isSearching = searchQuery.trim().length > 0;
-  const filteredBlocks = isSearching
-    ? category.blocks.filter((b) => b.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : category.blocks;
+
+  const filteredBlocks = useMemo(() => {
+    if (!isSearching) return category.blocks;
+    const lowerQuery = searchQuery.toLowerCase();
+    return category.blocks.filter((b) => b.label.toLowerCase().includes(lowerQuery));
+  }, [isSearching, searchQuery, category.blocks]);
 
   const effectiveOpen = isSearching ? filteredBlocks.length > 0 : isOpen;
 
@@ -61,13 +64,17 @@ export default function CategorySection({
   return (
     <div className="border-b border-gray-200">
       <button
-        onClick={() => setIsOpen(!effectiveOpen)}
-        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50 transition-colors"
+        type="button"
+        onClick={() => {
+          if (!isSearching) setIsOpen((prev) => !prev);
+        }}
+        aria-expanded={effectiveOpen}
+        className={`w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50 transition-colors ${isSearching ? "cursor-default" : ""}`}
       >
         {effectiveOpen ? (
-          <ChevronDown size={14} className="text-gray-400" />
+          <ChevronDown size={14} className={isSearching ? "text-gray-200" : "text-gray-400"} />
         ) : (
-          <ChevronRight size={14} className="text-gray-400" />
+          <ChevronRight size={14} className={isSearching ? "text-gray-200" : "text-gray-400"} />
         )}
         {Icon && <Icon size={16} color={category.colour} />}
         <span className="text-sm font-medium text-gray-700">{category.name}</span>
