@@ -105,10 +105,11 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
   return (
     <div className="h-10 flex items-center gap-1 px-3 bg-white border-b border-gray-200 flex-shrink-0">
-      <button onClick={handleNew} className={iconBtn} title="New">
+      <button type="button" onClick={handleNew} className={iconBtn} title="New">
         <FilePlus size={18} />
       </button>
       <button
+        type="button"
         onClick={handleDownload}
         disabled={!processedImage}
         className={iconBtn}
@@ -119,10 +120,10 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
       <div className={separator} />
 
-      <button onClick={handleUndo} className={iconBtn} title={`Undo (${mod}Z)`}>
+      <button type="button" onClick={handleUndo} className={iconBtn} title={`Undo (${mod}Z)`}>
         <Undo2 size={18} />
       </button>
-      <button onClick={handleRedo} className={iconBtn} title={`Redo (${mod}Y or ${mod}⇧Z)`}>
+      <button type="button" onClick={handleRedo} className={iconBtn} title={`Redo (${mod}Y or ${mod}⇧Z)`}>
         <Redo2 size={18} />
       </button>
 
@@ -130,6 +131,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
       {/* Step Preview toggle */}
       <button
+        type="button"
         onClick={() => setShowStepPreviews(!showStepPreviews)}
         className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border transition-colors ${showStepPreviews
           ? "bg-indigo-50 border-indigo-300 text-indigo-600"
@@ -144,6 +146,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
       <div className={separator} />
 
       <button
+        type="button"
         onClick={handleRun}
         disabled={isExecuting || !originalImage}
         className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

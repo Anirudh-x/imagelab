@@ -44,35 +44,49 @@ function calculateComplexity(blocks: number, unique: number): "Low" | "Medium" |
   return "Low";
 }
 
-export const usePipelineStore = create<PipelineState>((set) => ({
-  originalImage: null,
+/** Single source of truth for every resettable data field.
+ *  Used in reset() so that adding a new field to the store never silently
+ *  skips one of the reset paths.
+ */
+const INITIAL_STATE = {
+  originalImage: null as string | null,
   imageFormat: "png",
-  processedImage: null,
+  processedImage: null as string | null,
   isExecuting: false,
-  error: null,
-  errorStep: null,
-  selectedBlockType: null,
-  selectedBlockTooltip: null,
-  intermediates: [],
+  error: null as string | null,
+  errorStep: null as number | null,
+  selectedBlockType: null as string | null,
+  selectedBlockTooltip: null as string | null,
+  intermediates: [] as StepResult[],
   showStepPreviews: false,
-  selectedStepIndex: null,
+  selectedStepIndex: null as number | null,
   blockCount: 0,
   uniqueBlockTypes: 0,
-  categoryCounts: {},
-  complexity: "Low",
+<<<<<<< HEAD
+  categoryCounts: {} as Record<string, number>,
+  complexity: "Low" as "Low" | "Medium" | "High",
+};
+
+/** Fields wiped whenever the active image changes (new upload or clear).
+ *  Separated from INITIAL_STATE so UI preferences like showStepPreviews and
+ *  block-workspace stats are not disturbed on image load/clear.
+ */
+const IMAGE_RESET = {
+  originalImage: null as string | null,
+  processedImage: null as string | null,
+  error: null as string | null,
+  errorStep: null as number | null,
+  intermediates: [] as StepResult[],
+  selectedStepIndex: null as number | null,
+};
+
+export const usePipelineStore = create<PipelineState>((set) => ({
+  ...INITIAL_STATE,
   setIntermediates: (steps) => set({ intermediates: steps, selectedStepIndex: null }),
   setShowStepPreviews: (show) => set({ showStepPreviews: show }),
   setSelectedStepIndex: (index) => set({ selectedStepIndex: index }),
   setOriginalImage: (image, format) =>
-    set({
-      originalImage: image,
-      imageFormat: format,
-      processedImage: null,
-      error: null,
-      errorStep: null,
-      intermediates: [],
-      selectedStepIndex: null,
-    }),
+    set({ ...IMAGE_RESET, originalImage: image, imageFormat: format }),
   setProcessedImage: (image) => set({ processedImage: image, error: null, errorStep: null }),
   setExecuting: (executing) => set({ isExecuting: executing }),
   setError: (error, step = null) => set({ error, errorStep: step }),
@@ -83,7 +97,7 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   clearImage: () => {
     const state = usePipelineStore.getState();
     if (state._imageResetFn) state._imageResetFn();
-    set({ originalImage: null, processedImage: null, error: null, errorStep: null, intermediates: [], selectedStepIndex: null });
+    set({ ...IMAGE_RESET });
   },
   updateBlockStats: (workspace) => {
     const blocks = workspace.getAllBlocks(false);
@@ -111,22 +125,5 @@ export const usePipelineStore = create<PipelineState>((set) => ({
       complexity: calculateComplexity(blocks.length, uniqueTypes.size),
     });
   },
-  reset: () =>
-    set({
-      originalImage: null,
-      imageFormat: "png",
-      processedImage: null,
-      isExecuting: false,
-      error: null,
-      errorStep: null,
-      selectedBlockType: null,
-      selectedBlockTooltip: null,
-      intermediates: [],
-      showStepPreviews: false,
-      selectedStepIndex: null,
-      blockCount: 0,
-      uniqueBlockTypes: 0,
-      categoryCounts: {},
-      complexity: "Low",
-    }),
+  reset: () => set({ ...INITIAL_STATE }),
 }));

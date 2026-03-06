@@ -8,7 +8,8 @@ interface HistogramCanvasProps {
 }
 
 // OpenCV returns histograms in BGR order; remap to displayable RGB colours.
-const CHANNEL_COLORS = ["#3b82f6", "#22c55e", "#ef4444"]; // B → blue, G → green, R → red
+// Index 3 covers the alpha channel in BGRA images.
+const CHANNEL_COLORS = ["#3b82f6", "#22c55e", "#ef4444", "#a855f7"]; // B → blue, G → green, R → red, A → purple
 const GRAY_COLOR = "#6b7280";
 
 export default function HistogramCanvas({ stats, width = 240, height = 80 }: HistogramCanvasProps) {
@@ -36,8 +37,14 @@ export default function HistogramCanvas({ stats, width = 240, height = 80 }: His
     const histograms = stats.histograms;
     if (!histograms || histograms.length === 0) return;
 
-    // Find global max across all channels for normalisation
-    const globalMax = Math.max(...histograms.flatMap((h) => h));
+    // Find global max across all channels for normalisation.
+    // Avoid spreading a potentially large array into a variadic call (stack risk).
+    let globalMax = 0;
+    for (const hist of histograms) {
+      for (const count of hist) {
+        if (count > globalMax) globalMax = count;
+      }
+    }
     if (globalMax === 0) return;
 
     const barWidth = width / 256;
@@ -59,7 +66,13 @@ export default function HistogramCanvas({ stats, width = 240, height = 80 }: His
     <canvas
       ref={canvasRef}
       className="rounded border border-gray-200"
-      title={stats.channels === 1 ? "Grayscale histogram" : "BGR channel histograms (B=blue, G=green, R=red)"}
+      title={
+        stats.channels === 1
+          ? "Grayscale histogram"
+          : stats.channels === 4
+            ? "BGRA channel histograms (B=blue, G=green, R=red, A=purple)"
+            : "BGR channel histograms (B=blue, G=green, R=red)"
+      }
     />
   );
 }

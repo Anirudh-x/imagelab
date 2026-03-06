@@ -19,8 +19,8 @@ class ImageStats(BaseModel):
     height: int
     channels: int
     dtype: str
-    min: float
-    max: float
+    pixel_min: float
+    pixel_max: float
     mean: float
     # Per-channel histograms: list of 256-bucket counts per channel (B/G/R in OpenCV order for multi-channel images, or single-channel)
     histograms: list[list[int]]

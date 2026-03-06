@@ -15,8 +15,8 @@ export interface ImageStats {
   height: number;
   channels: number;
   dtype: string;
-  min: number;
-  max: number;
+  pixel_min: number;
+  pixel_max: number;
   mean: number;
   /** 256-bucket histograms per channel (BGR order from OpenCV, or single for grayscale) */
   histograms: number[][];

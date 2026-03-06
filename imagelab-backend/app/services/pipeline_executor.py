@@ -1,10 +1,32 @@
 import logging
 
-from app.models.pipeline import PipelineRequest, PipelineResponse, StepResult
+import cv2
+
+from app.models.pipeline import ImageStats, PipelineRequest, PipelineResponse, StepResult
 from app.operators.registry import get_operator
 from app.utils.image import compute_image_stats, decode_base64_image, encode_image_base64
 
+logger = logging.getLogger(__name__)
+
 NOOP_TYPES = {"basic_readimage", "basic_writeimage", "border_for_all", "border_each_side"}
+
+# Maximum edge length (pixels) for intermediate thumbnail encoding.
+_THUMBNAIL_MAX = 256
+
+
+def _thumbnail(image) -> object:
+    """Return a copy of *image* scaled so its longest edge is ≤ _THUMBNAIL_MAX.
+
+    The original image is returned unchanged if it already fits within the
+    limit, avoiding an unnecessary copy.
+    """
+    h, w = image.shape[:2]
+    if h <= _THUMBNAIL_MAX and w <= _THUMBNAIL_MAX:
+        return image
+    scale = _THUMBNAIL_MAX / max(h, w)
+    new_w = max(1, int(w * scale))
+    new_h = max(1, int(h * scale))
+    return cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
 
 
 def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
@@ -39,8 +61,9 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
 
         if request.include_intermediates:
             try:
-                encoded = encode_image_base64(image, request.image_format)
-                stats = compute_image_stats(image)
+                thumb = _thumbnail(image)
+                encoded = encode_image_base64(thumb, request.image_format)
+                stats = ImageStats(**compute_image_stats(image))
                 intermediates.append(
                     StepResult(
                         step=i,
@@ -52,7 +75,7 @@ def execute_pipeline(request: PipelineRequest) -> PipelineResponse:
                 )
             except Exception as capture_err:
                 # Non-fatal: log and skip this step's intermediate instead of silently dropping it
-                logging.getLogger(__name__).warning(
+                logger.warning(
                     "Failed to capture intermediate for step %d (%s): %s: %s",
                     i, step.type, type(capture_err).__name__, capture_err
                 )

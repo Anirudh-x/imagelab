@@ -13,30 +13,31 @@ function operatorLabel(type: string): string {
   const name = type.slice(underscoreIndex + 1).trim();
   return name || type;
 }
-}
 
 /** One card in the step list. */
 function StepCard({
   result,
   index,
   isSelected,
-  imageFormat,
   onSelect,
 }: {
   result: StepResult;
   index: number;
   isSelected: boolean;
-  imageFormat: string;
   onSelect: () => void;
 }) {
   const { stats } = result;
 
+  const panelId = `step-details-${index}`;
+
   return (
     <button
       type="button"
+      aria-expanded={isSelected}
+      aria-controls={panelId}
       className={`w-full text-left border rounded-lg overflow-hidden cursor-pointer transition-all ${isSelected
-          ? "border-indigo-400 ring-1 ring-indigo-300 bg-indigo-50"
-          : "border-gray-200 hover:border-gray-300 bg-white"
+        ? "border-indigo-400 ring-1 ring-indigo-300 bg-indigo-50"
+        : "border-gray-200 hover:border-gray-300 bg-white"
         }`}
       onClick={onSelect}
     >
@@ -58,56 +59,48 @@ function StepCard({
       {/* Thumbnail */}
       <div className="flex justify-center bg-gray-50 p-1.5">
         <img
-          src={`data:image/${imageFormat};base64,${result.image}`}
+          src={`data:image/${result.image_format};base64,${result.image}`}
           alt={`Step ${index + 1} — ${result.operator}`}
           className="max-h-24 max-w-full object-contain rounded"
           loading="lazy"
         />
       </div>
 
-      {/* Expanded details */}
-      {isSelected && (
-        <div className="px-2 py-2 space-y-2 border-t border-indigo-100 bg-white">
-          {/* Metadata grid */}
-          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-gray-500">
-            <span>Size</span>
-            <span className="text-gray-700 font-medium">
-              {stats.width} × {stats.height}
-            </span>
-            <span>Channels</span>
-            <span className="text-gray-700 font-medium">{stats.channels}</span>
-            <span>Dtype</span>
-            <span className="text-gray-700 font-medium">{stats.dtype}</span>
-            <span>Min / Max</span>
-            <span className="text-gray-700 font-medium">
-              {stats.min.toFixed(0)} / {stats.max.toFixed(0)}
-            </span>
-            <span>Mean</span>
-            <span className="text-gray-700 font-medium">{stats.mean}</span>
-          </div>
-
-          {/* Histogram */}
-          <div>
-            <p className="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">
-              {stats.channels === 1
-                ? "Grayscale"
-                : stats.channels === 3
-                ? "BGR"
-                : stats.channels === 4
-                ? "BGRA"
-                : `${stats.channels}-channel`} Histogram
-            </p>
-            <HistogramCanvas stats={stats} width={220} height={60} />
-          </div>
+      {/* Expanded details — always in the DOM so aria-controls target is valid */}
+      <div id={panelId} hidden={!isSelected} className="px-2 py-2 space-y-2 border-t border-indigo-100 bg-white">
+        {/* Metadata grid */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-gray-500">
+          <span>Size</span>
+          <span className="text-gray-700 font-medium">
+            {stats.width} × {stats.height}
+          </span>
+          <span>Channels</span>
+          <span className="text-gray-700 font-medium">{stats.channels}</span>
+          <span>Dtype</span>
+          <span className="text-gray-700 font-medium">{stats.dtype}</span>
+          <span>Min / Max</span>
+          <span className="text-gray-700 font-medium">
+            {stats.pixel_min.toFixed(2)} / {stats.pixel_max.toFixed(2)}
+          </span>
+          <span>Mean</span>
+          <span className="text-gray-700 font-medium">{stats.mean.toFixed(2)}</span>
         </div>
-      )}
+
+        {/* Histogram */}
+        <div>
+          <p className="text-[10px] text-gray-400 mb-1 uppercase tracking-wide">
+            {stats.channels === 1 ? "Grayscale" : stats.channels === 4 ? "BGRA" : "BGR"} Histogram
+          </p>
+          <HistogramCanvas stats={stats} width={220} height={60} />
+        </div>
+      </div>
     </button>
   );
 }
 
 /** The full scrollable step-preview side panel. */
 export default function StepPreviewList() {
-  const { intermediates, selectedStepIndex, imageFormat, setSelectedStepIndex } =
+  const { intermediates, selectedStepIndex, setSelectedStepIndex } =
     usePipelineStore();
 
   if (intermediates.length === 0) {
@@ -134,7 +127,6 @@ export default function StepPreviewList() {
           result={result}
           index={i}
           isSelected={selectedStepIndex === i}
-          imageFormat={imageFormat}
           onSelect={() => setSelectedStepIndex(selectedStepIndex === i ? null : i)}
         />
       ))}
