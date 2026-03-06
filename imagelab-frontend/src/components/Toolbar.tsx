@@ -4,17 +4,14 @@ import { usePipelineStore } from "../store/pipelineStore";
 import { executePipeline } from "../api/pipeline";
 import { extractPipeline } from "../hooks/usePipeline";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { useModKey } from "../hooks/useModKey";
 
 interface ToolbarProps {
   workspace: Blockly.WorkspaceSvg | null;
 }
 
-// Detect macOS to show Cmd vs Ctrl in tooltips
-const isMac =
-  typeof navigator !== "undefined" && /mac/i.test(navigator.platform || navigator.userAgent);
-const mod = isMac ? "⌘" : "Ctrl+";
-
 export default function Toolbar({ workspace }: ToolbarProps) {
+  const mod = useModKey();
   const {
     originalImage,
     imageFormat,
@@ -100,7 +97,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
 
   return (
     <div className="h-10 flex items-center gap-1 px-3 bg-white border-b border-gray-200 flex-shrink-0">
-      <button onClick={handleNew} className={iconBtn} title="New">
+      <button onClick={handleNew} className={iconBtn} title="New" aria-label="New">
         <FilePlus size={18} />
       </button>
       <button
@@ -108,16 +105,17 @@ export default function Toolbar({ workspace }: ToolbarProps) {
         disabled={!processedImage}
         className={iconBtn}
         title={`Download (${mod}S)`}
+        aria-label={`Download (${mod}S)`}
       >
         <Download size={18} />
       </button>
 
       <div className={separator} />
 
-      <button onClick={handleUndo} className={iconBtn} title={`Undo (${mod}Z)`}>
+      <button onClick={handleUndo} className={iconBtn} title={`Undo (${mod}Z)`} aria-label={`Undo (${mod}Z)`}>
         <Undo2 size={18} />
       </button>
-      <button onClick={handleRedo} className={iconBtn} title={`Redo (${mod}Y or ${mod}⇧Z)`}>
+      <button onClick={handleRedo} className={iconBtn} title={`Redo (${mod}Y or ${mod}⇧Z)`} aria-label={`Redo (${mod}Y or ${mod}⇧Z)`}>
         <Redo2 size={18} />
       </button>
 
@@ -128,6 +126,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
         disabled={isExecuting || !originalImage}
         className="flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         title={`Run Pipeline (${mod}Enter)`}
+        aria-label={`Run Pipeline (${mod}Enter)`}
       >
         {isExecuting ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
         {isExecuting ? "Running..." : "Run"}
