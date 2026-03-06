@@ -62,7 +62,6 @@ const INITIAL_STATE = {
   selectedStepIndex: null as number | null,
   blockCount: 0,
   uniqueBlockTypes: 0,
-<<<<<<< HEAD
   categoryCounts: {} as Record<string, number>,
   complexity: "Low" as "Low" | "Medium" | "High",
 };
