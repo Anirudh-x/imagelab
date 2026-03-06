@@ -8,7 +8,7 @@ describe("useModKey", () => {
   });
 
   it('returns "Ctrl+" on Windows', () => {
-    Object.defineProperty(global, "navigator", {
+    Object.defineProperty(globalThis, "navigator", {
       value: { platform: "Win32", userAgentData: undefined },
       configurable: true,
     });
@@ -17,7 +17,7 @@ describe("useModKey", () => {
   });
 
   it('returns "Ctrl+" on Linux', () => {
-    Object.defineProperty(global, "navigator", {
+    Object.defineProperty(globalThis, "navigator", {
       value: { platform: "Linux x86_64", userAgentData: undefined },
       configurable: true,
     });
@@ -26,7 +26,7 @@ describe("useModKey", () => {
   });
 
   it('returns "⌘" on macOS via modern userAgentData.platform', () => {
-    Object.defineProperty(global, "navigator", {
+    Object.defineProperty(globalThis, "navigator", {
       value: { platform: "MacIntel", userAgentData: { platform: "macOS" } },
       configurable: true,
     });
@@ -35,7 +35,7 @@ describe("useModKey", () => {
   });
 
   it('returns "⌘" on macOS via legacy navigator.platform fallback', () => {
-    Object.defineProperty(global, "navigator", {
+    Object.defineProperty(globalThis, "navigator", {
       value: { platform: "MacIntel", userAgentData: undefined },
       configurable: true,
     });
@@ -44,7 +44,7 @@ describe("useModKey", () => {
   });
 
   it('returns "Ctrl+" when navigator is undefined (SSR)', () => {
-    Object.defineProperty(global, "navigator", {
+    Object.defineProperty(globalThis, "navigator", {
       value: undefined,
       configurable: true,
     });

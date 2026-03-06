@@ -4,8 +4,8 @@ import Toolbar from "./Toolbar";
 
 // Mock Blockly — not needed for tooltip/aria-label tests
 vi.mock("blockly", () => ({
-  WorkspaceSvg: class {},
-  BlockSvg: class {},
+  WorkspaceSvg: class { },
+  BlockSvg: class { },
   common: { getSelected: vi.fn() },
 }));
 
