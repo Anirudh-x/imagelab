@@ -43,16 +43,16 @@ function StepCard({
     >
       {/* Header row */}
       <div className="flex items-center gap-1.5 px-2 py-1.5 border-b border-gray-100">
-        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-[10px] font-bold flex items-center justify-center">
+        <span className="shrink-0 w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-[10px] font-bold flex items-center justify-center">
           {index + 1}
         </span>
         <span className="text-xs font-medium text-gray-700 truncate flex-1">
           {operatorLabel(result.operator)}
         </span>
         {isSelected ? (
-          <ChevronDown size={12} className="text-indigo-400 flex-shrink-0" />
+          <ChevronDown size={12} className="text-indigo-400 shrink-0" />
         ) : (
-          <ChevronRight size={12} className="text-gray-300 flex-shrink-0" />
+          <ChevronRight size={12} className="text-gray-300 shrink-0" />
         )}
       </div>
 

@@ -104,7 +104,7 @@ export default function Toolbar({ workspace }: ToolbarProps) {
   const separator = "w-px h-5 bg-gray-300 mx-1";
 
   return (
-    <div className="h-10 flex items-center gap-1 px-3 bg-white border-b border-gray-200 flex-shrink-0">
+    <div className="h-10 flex items-center gap-1 px-3 bg-white border-b border-gray-200 shrink-0">
       <button type="button" onClick={handleNew} className={iconBtn} title="New">
         <FilePlus size={18} />
       </button>

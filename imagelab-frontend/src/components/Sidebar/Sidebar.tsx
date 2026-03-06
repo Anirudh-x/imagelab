@@ -42,8 +42,8 @@ export default function Sidebar({ workspace }: SidebarProps) {
   }, [workspace, tick]);
 
   return (
-    <div className="w-80 h-full bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
-      <div className="flex-shrink-0 px-3 py-2 border-b border-gray-200 flex flex-col gap-2">
+    <div className="w-80 h-full bg-white border-r border-gray-200 shrink-0 flex flex-col">
+      <div className="shrink-0 px-3 py-2 border-b border-gray-200 flex flex-col gap-2">
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Blocks</h2>
         <div className="relative">
           <Search

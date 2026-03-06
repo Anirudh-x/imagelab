@@ -67,7 +67,7 @@ export default function Layout() {
             {showStepPreviews && (
               <div
                 style={{ width: stepPanelWidth }}
-                className="flex-shrink-0 h-full bg-white border-l border-gray-200 flex flex-col relative"
+                className="shrink-0 h-full bg-white border-l border-gray-200 flex flex-col relative"
               >
                 {/* Drag handle */}
                 <div
@@ -75,7 +75,7 @@ export default function Layout() {
                   className="absolute left-0 top-0 h-full w-1 cursor-col-resize hover:bg-indigo-300 transition-colors z-10"
                   title="Drag to resize"
                 />
-                <div className="px-3 py-1.5 border-b border-gray-200 flex-shrink-0">
+                <div className="px-3 py-1.5 border-b border-gray-200 shrink-0">
                   <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Step-by-Step
                   </h2>

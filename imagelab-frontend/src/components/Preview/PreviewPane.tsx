@@ -46,7 +46,7 @@ export default function PreviewPane() {
     setter((prev) => Math.max((prev ?? 300) - 100, 100));
 
   return (
-    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
+    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col shrink-0">
       {/* Original image — top half */}
       <div className="flex-1 flex flex-col min-h-0 border-b border-gray-200">
         <div className="px-3 py-1.5 border-b border-gray-200 flex items-center gap-1.5">
