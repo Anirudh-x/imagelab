@@ -84,10 +84,18 @@ export const operatorDocs: Record<string, OperatorDoc> = {
     parameters: [
       {
         name: "Scale X, Scale Y",
-        description: "Scaling factors along the horizontal and vertical axes.",
+        description:
+          "Scaling factors along the horizontal and vertical axes. Values greater than 1 enlarge the image; values between 0 and 1 shrink it.",
+      },
+      {
+        name: "Interpolation",
+        description:
+          "Resampling method. Use LINEAR for general use, AREA for shrinking, CUBIC or LANCZOS4 for high-quality enlarging, NEAREST for fastest processing.",
       },
     ],
-    useCases: ["Making images uniform for neural networks, creating thumbnails."],
+    useCases: [
+      "Making images uniform for neural networks, creating thumbnails, upscaling for display.",
+    ],
   },
 
   // --- Conversions ---
