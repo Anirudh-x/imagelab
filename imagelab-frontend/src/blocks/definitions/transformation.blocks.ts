@@ -24,12 +24,24 @@ export const transformationBlocks = [
   },
   {
     type: "transformation_laplacian",
-    message0: "Apply laplacian with %1 depth",
-    args0: [{ type: "field_number", name: "ddepth", value: 0, min: -10, max: 10 }],
+    message0: "Apply Laplacian with kernel size %1 and output depth %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "ksize",
+        options: [
+          ["1", "1"],
+          ["3", "3"],
+          ["5", "5"],
+          ["7", "7"],
+        ],
+      },
+      { type: "field_number", name: "ddepth", value: -1, min: -1, max: 6 },
+    ],
     previousStatement: null,
     nextStatement: null,
     style: "transformation_style",
     tooltip:
-      "Apply Laplacian edge detection (second order derivative) - Applies the Laplacian operator to detect edges in an image. The 'ddepth' parameter controls the depth of the output image; a value of 0 means the output will have the same depth as the source image. This is useful for detecting edges and corners in an image.",
+      "Apply Laplacian edge detection (second order derivative) - Detects regions of rapid intensity change. Kernel size controls the aperture (1, 3, 5, or 7) — larger values detect broader edges. Output depth: use -1 to match the source image depth, or a specific cv2 depth constant. Useful for blob detection and sharpening edge transitions.",
   },
 ];

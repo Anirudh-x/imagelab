@@ -430,7 +430,13 @@ export const operatorDocs: Record<string, OperatorDoc> = {
     parameters: [
       {
         name: "KSize",
-        description: "Aperture size used to compute the second-derivative filters.",
+        description:
+          "Aperture size for the Laplacian kernel. Must be a positive odd integer: 1, 3, 5, or 7. Larger values detect broader, smoother edges.",
+      },
+      {
+        name: "DDepth",
+        description:
+          "Desired depth of the output image. Use -1 to match the source image depth (recommended default). Other values correspond to OpenCV depth constants.",
       },
     ],
     formula: "Δf = ∂²f/∂x² + ∂²f/∂y²",
