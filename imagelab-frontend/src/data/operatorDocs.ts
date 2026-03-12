@@ -90,11 +90,13 @@ export const operatorDocs: Record<string, OperatorDoc> = {
       {
         name: "Interpolation",
         description:
-          "Resampling method. Use LINEAR for general use, AREA for shrinking, CUBIC or LANCZOS4 for high-quality enlarging, NEAREST for fastest processing.",
+          "Resampling method used when resizing. Default: LINEAR (good general-purpose choice). Use AREA when shrinking, CUBIC or LANCZOS4 for highest quality when enlarging, or NEAREST for maximum speed.",
       },
     ],
     useCases: [
-      "Making images uniform for neural networks, creating thumbnails, upscaling for display.",
+      "Making images uniform for neural networks (AREA for downscaling).",
+      "Creating thumbnails from large images (AREA).",
+      "Upscaling for display or printing (CUBIC or LANCZOS4).",
     ],
   },
 

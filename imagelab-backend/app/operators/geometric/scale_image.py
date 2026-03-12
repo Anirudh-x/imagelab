@@ -18,8 +18,11 @@ class ScaleImage(BaseOperator):
         fy = float(self.params.get("fy", 1))
 
         interpolation_str = str(self.params.get("interpolation", "LINEAR")).upper()
-        interpolation_flag = _INTERPOLATION_MAP.get(interpolation_str, cv2.INTER_LINEAR)
+        if interpolation_str not in _INTERPOLATION_MAP:
+            raise ValueError(
+                f"Unknown interpolation '{interpolation_str}'. "
+                f"Valid options: {list(_INTERPOLATION_MAP.keys())}"
+            )
+        interpolation_flag = _INTERPOLATION_MAP[interpolation_str]
 
-        rows, cols = image.shape[:2]
-        new_size = (int(cols * fx), int(rows * fy))
-        return cv2.resize(image, new_size, fx=fx, fy=fy, interpolation=interpolation_flag)
+        return cv2.resize(image, dsize=(0, 0), fx=fx, fy=fy, interpolation=interpolation_flag)
