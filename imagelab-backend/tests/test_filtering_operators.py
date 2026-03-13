@@ -3,6 +3,7 @@ import pytest
 
 from app.operators.filtering.bilateral_filter import BilateralFilter
 from app.operators.filtering.box_filter import BoxFilter
+from app.operators.filtering.canny_edge_detection import CannyEdgeDetection
 from app.operators.filtering.dilation import Dilation
 from app.operators.filtering.erosion import Erosion
 from app.operators.filtering.morphological import Morphological
@@ -225,3 +226,50 @@ class TestPyramidDown:
     def test_output_is_uint8(self, color_image):
         result = PyramidDown({}).compute(color_image)
         assert result.dtype == np.uint8
+
+
+# CannyEdgeDetection
+
+
+class TestCannyEdgeDetection:
+    def test_default_params_output_shape(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.shape == (color_image.shape[0], color_image.shape[1], 3)
+
+    def test_default_params_is_bgr(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.shape[2] == 3
+
+    def test_grayscale_input(self, grayscale_image):
+        result = CannyEdgeDetection({}).compute(grayscale_image)
+        assert result.shape == (grayscale_image.shape[0], grayscale_image.shape[1], 3)
+
+    def test_grayscale_input_converted_to_bgr(self, grayscale_image):
+        result = CannyEdgeDetection({}).compute(grayscale_image)
+        assert result.shape[2] == 3
+
+    def test_rgba_input_converted_to_bgr(self, rgba_image):
+        result = CannyEdgeDetection({}).compute(rgba_image)
+        assert result.shape[2] == 3
+        assert result.shape[0] == rgba_image.shape[0]
+        assert result.shape[1] == rgba_image.shape[1]
+
+    def test_custom_thresholds(self, color_image):
+        result = CannyEdgeDetection({"threshold1": 100, "threshold2": 200}).compute(color_image)
+        assert result.shape == (color_image.shape[0], color_image.shape[1], 3)
+
+    def test_low_thresholds_more_edges(self, color_image):
+        result_low = CannyEdgeDetection({"threshold1": 10, "threshold2": 30}).compute(color_image)
+        result_high = CannyEdgeDetection({"threshold1": 100, "threshold2": 200}).compute(color_image)
+        # Lower thresholds should detect more edges (higher white pixel count)
+        assert result_low.sum() >= result_high.sum()
+
+    def test_output_is_uint8(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.dtype == np.uint8
+
+    def test_output_is_binary_like(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        # Edges should be either dark (0) or bright (255) in grayscale - all channels equal in BGR
+        unique_values = np.unique(result)
+        assert all(val in [0, 255] for val in unique_values)
