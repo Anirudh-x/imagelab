@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import * as Blockly from "blockly";
 import { categories } from "../blocks/categories";
-import type { StepResult } from "../types/pipeline";
-import type { PipelineTimings } from "../types/pipeline";
+import type { PipelineTimings, StepResult } from "../types/pipeline";
 
 interface PipelineState {
   originalImage: string | null;

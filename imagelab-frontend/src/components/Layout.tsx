@@ -8,7 +8,6 @@ import PreviewPane from "./Preview/PreviewPane";
 import StepPreviewList from "./Preview/StepPreviewList";
 import InfoPane from "./InfoPane";
 import { ErrorBoundary } from "./ErrorBoundary";
-import { usePipelineStore } from "../store/pipelineStore";
 
 const STEP_PANEL_MIN = 180;
 const STEP_PANEL_MAX = 480;

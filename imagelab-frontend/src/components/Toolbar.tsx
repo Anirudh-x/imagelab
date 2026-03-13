@@ -143,11 +143,10 @@ export default function Toolbar({ workspace }: ToolbarProps) {
         <button
           type="button"
           onClick={() => setShowStepPreviews(!showStepPreviews)}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border transition-colors ${
-            showStepPreviews
+          className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium border transition-colors ${showStepPreviews
               ? "bg-indigo-50 border-indigo-300 text-indigo-600"
               : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-          }`}
+            }`}
           title="Toggle per-step intermediate previews"
         >
           <Layers size={13} />
@@ -190,13 +189,12 @@ export default function Toolbar({ workspace }: ToolbarProps) {
                 {blockCount} {blockCount === 1 ? "block" : "blocks"}
               </span>
               <span
-                className={`text-[10px] uppercase font-bold tracking-wide ${
-                  complexity === "High"
+                className={`text-[10px] uppercase font-bold tracking-wide ${complexity === "High"
                     ? "text-red-500"
                     : complexity === "Medium"
                       ? "text-orange-500"
                       : "text-green-500"
-                }`}
+                  }`}
               >
                 {complexity} Complexity
               </span>
