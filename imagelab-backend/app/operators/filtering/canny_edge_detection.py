@@ -9,6 +9,11 @@ class CannyEdgeDetection(BaseOperator):
         threshold1 = float(self.params.get("threshold1", 50))
         threshold2 = float(self.params.get("threshold2", 150))
 
+        if threshold1 < 0 or threshold2 < 0:
+            raise ValueError("CannyEdgeDetection thresholds must be non-negative.")
+        if threshold1 > threshold2:
+            raise ValueError("CannyEdgeDetection requires threshold1 to be less than or equal to threshold2.")
+
         # Convert to grayscale if needed
         if len(image.shape) == 3 and image.shape[2] == 3:
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
