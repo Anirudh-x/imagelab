@@ -30,6 +30,17 @@ export interface StepResult {
   stats: ImageStats;
 }
 
+export interface StepTiming {
+  step: number;
+  operator_type: string;
+  duration_ms: number;
+}
+
+export interface PipelineTimings {
+  total_ms: number;
+  steps: StepTiming[];
+}
+
 export interface PipelineResponse {
   success: boolean;
   image?: string;
@@ -37,4 +48,5 @@ export interface PipelineResponse {
   error?: string;
   step?: number;
   intermediates?: StepResult[];
+  timings?: PipelineTimings;
 }

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import * as Blockly from "blockly";
 import { categories } from "../blocks/categories";
 import type { StepResult } from "../types/pipeline";
+import type { PipelineTimings } from "../types/pipeline";
 
 interface PipelineState {
   originalImage: string | null;
@@ -19,6 +20,7 @@ interface PipelineState {
   setIntermediates: (steps: StepResult[]) => void;
   setShowStepPreviews: (show: boolean) => void;
   setSelectedStepIndex: (index: number | null) => void;
+  timings: PipelineTimings | null;
 
   // Statistics
   blockCount: number;
@@ -30,6 +32,7 @@ interface PipelineState {
   setExecuting: (executing: boolean) => void;
   setError: (error: string | null, step?: number | null) => void;
   setSelectedBlock: (type: string | null, tooltip: string | null) => void;
+  setTiming: (timings: PipelineTimings | null) => void;
   updateBlockStats: (workspace: Blockly.WorkspaceSvg) => void;
   reset: () => void;
   clearImage: () => void;
@@ -44,10 +47,6 @@ function calculateComplexity(blocks: number, unique: number): "Low" | "Medium" |
   return "Low";
 }
 
-/** Single source of truth for every resettable data field.
- *  Used in reset() so that adding a new field to the store never silently
- *  skips one of the reset paths.
- */
 const INITIAL_STATE = {
   originalImage: null as string | null,
   imageFormat: "png",
@@ -60,16 +59,13 @@ const INITIAL_STATE = {
   intermediates: [] as StepResult[],
   showStepPreviews: false,
   selectedStepIndex: null as number | null,
+  timings: null as PipelineTimings | null,
   blockCount: 0,
   uniqueBlockTypes: 0,
   categoryCounts: {} as Record<string, number>,
   complexity: "Low" as "Low" | "Medium" | "High",
 };
 
-/** Fields wiped whenever the active image changes (new upload or clear).
- *  Separated from INITIAL_STATE so UI preferences like showStepPreviews and
- *  block-workspace stats are not disturbed on image load/clear.
- */
 const IMAGE_RESET = {
   originalImage: null as string | null,
   processedImage: null as string | null,
@@ -77,6 +73,7 @@ const IMAGE_RESET = {
   errorStep: null as number | null,
   intermediates: [] as StepResult[],
   selectedStepIndex: null as number | null,
+  timings: null as PipelineTimings | null,
 };
 
 export const usePipelineStore = create<PipelineState>((set) => ({
@@ -91,6 +88,7 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   setError: (error, step = null) => set({ error, errorStep: step }),
   setSelectedBlock: (type, tooltip) =>
     set({ selectedBlockType: type, selectedBlockTooltip: tooltip }),
+  setTiming: (timings) => set({ timings }),
   _imageResetFn: null as (() => void) | null,
   registerImageReset: (fn) => set({ _imageResetFn: fn }),
   clearImage: () => {

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { useBlocklyWorkspace } from "../hooks/useBlocklyWorkspace";
+import { usePipelineStore } from "../store/pipelineStore";
 import Navbar from "./Navbar";
 import Toolbar from "./Toolbar";
 import Sidebar from "./Sidebar/Sidebar";
@@ -15,6 +16,7 @@ const STEP_PANEL_DEFAULT = 256;
 
 export default function Layout() {
   const { containerRef, workspace } = useBlocklyWorkspace();
+  const { reset } = usePipelineStore();
   const [resetKey, setResetKey] = useState(0);
   const showStepPreviews = usePipelineStore((s) => s.showStepPreviews);
   const [stepPanelWidth, setStepPanelWidth] = useState(STEP_PANEL_DEFAULT);
@@ -23,6 +25,7 @@ export default function Layout() {
 
   const handleEditorReset = () => {
     setResetKey((prev) => prev + 1);
+    reset();
   };
 
   const onDragHandleMouseDown = useCallback(

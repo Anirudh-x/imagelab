@@ -35,6 +35,17 @@ class StepResult(BaseModel):
     stats: ImageStats
 
 
+class StepTiming(BaseModel):
+    step: int
+    operator_type: str
+    duration_ms: float
+
+
+class PipelineTimings(BaseModel):
+    total_ms: float
+    steps: list[StepTiming]
+
+
 class PipelineResponse(BaseModel):
     success: bool
     image: str | None = None
@@ -42,3 +53,4 @@ class PipelineResponse(BaseModel):
     error: str | None = None
     step: int | None = None
     intermediates: list[StepResult] | None = None
+    timings: PipelineTimings | None = None
