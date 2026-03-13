@@ -115,6 +115,21 @@ export const filteringBlocks = [
     tooltip: "Applies image sharpening to enhance edges and details",
   },
   {
+    type: "filtering_cannyedge",
+    message0: "Apply Canny edge detection %1 threshold 1 %2 %3 threshold 2 %4",
+    args0: [
+      { type: "input_dummy" },
+      { type: "field_number", name: "threshold1", value: 50, min: 0 },
+      { type: "input_dummy" },
+      { type: "field_number", name: "threshold2", value: 150, min: 0 },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    style: "filtering_style",
+    tooltip:
+      "Applies Canny edge detection - A multi-stage algorithm that produces clean, thin edges by applying noise reduction via Gaussian blur, gradient computation, non-maximum suppression, and hysteresis thresholding. The algorithm converts color images to grayscale automatically. 'Threshold 1' (lower threshold) determines the minimum gradient magnitude; pixels below this are discarded. 'Threshold 2' (upper threshold) determines the maximum; pixels above this are considered strong edges. Pixels between the two thresholds are kept only if connected to strong edges. Typical values are threshold1=50 and threshold2=150.",
+  },
+  {
     type: "filtering_gaborfilter",
     message0:
       "Apply Gabor filter %1 kernel size %2 %3 sigma %4 %5 theta (deg) %6 %7 lambda %8 %9 gamma %10",
