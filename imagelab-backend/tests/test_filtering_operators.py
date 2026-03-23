@@ -4,6 +4,7 @@ import pytest
 
 from app.operators.filtering.bilateral_filter import BilateralFilter
 from app.operators.filtering.box_filter import BoxFilter
+from app.operators.filtering.canny_edge_detection import CannyEdgeDetection
 from app.operators.filtering.dilation import Dilation
 from app.operators.filtering.erosion import Erosion
 from app.operators.filtering.morphological import Morphological
@@ -80,9 +81,7 @@ class TestBoxFilter:
         image = np.arange(75, dtype=np.uint8).reshape(5, 5, 3)
         width, height = 1, 5
 
-        result = BoxFilter({"width": width, "height": height, "depth": -1}).compute(
-            image
-        )
+        result = BoxFilter({"width": width, "height": height, "depth": -1}).compute(image)
         expected = cv2.boxFilter(
             image,
             -1,
@@ -244,3 +243,95 @@ class TestPyramidDown:
     def test_output_is_uint8(self, color_image):
         result = PyramidDown({}).compute(color_image)
         assert result.dtype == np.uint8
+
+
+# CannyEdgeDetection
+
+
+class TestCannyEdgeDetection:
+    def test_default_params_output_shape(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.shape == (color_image.shape[0], color_image.shape[1], 3)
+
+    def test_default_params_is_bgr(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.shape[2] == 3
+
+    def test_grayscale_input(self, grayscale_image):
+        result = CannyEdgeDetection({}).compute(grayscale_image)
+        assert result.shape == (grayscale_image.shape[0], grayscale_image.shape[1], 3)
+
+    def test_grayscale_input_converted_to_bgr(self, grayscale_image):
+        result = CannyEdgeDetection({}).compute(grayscale_image)
+        assert result.shape[2] == 3
+
+    def test_rgba_input_converted_to_bgr(self, rgba_image):
+        result = CannyEdgeDetection({}).compute(rgba_image)
+        assert result.shape[2] == 3
+        assert result.shape[0] == rgba_image.shape[0]
+        assert result.shape[1] == rgba_image.shape[1]
+
+    def test_custom_thresholds(self, color_image):
+        result = CannyEdgeDetection({"threshold1": 100, "threshold2": 200}).compute(color_image)
+        assert result.shape == (color_image.shape[0], color_image.shape[1], 3)
+
+    def test_low_thresholds_more_edges(self):
+        # Create a synthetic image with a sharp edge for consistent testing
+        img = np.zeros((100, 100, 3), dtype=np.uint8)
+        img[:, 50:] = 255  # hard vertical edge at x=50
+
+        result_low = CannyEdgeDetection({"threshold1": 10, "threshold2": 30}).compute(img)
+        result_high = CannyEdgeDetection({"threshold1": 200, "threshold2": 220}).compute(img)
+        # Lower thresholds should detect more or equal edges
+        assert result_low.sum() >= result_high.sum()
+        # And the low-threshold result should actually detect something
+        assert result_low.sum() > 0
+
+    def test_output_is_uint8(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        assert result.dtype == np.uint8
+
+    def test_output_is_binary_like(self, color_image):
+        result = CannyEdgeDetection({}).compute(color_image)
+        # Edges should be either dark (0) or bright (255) in grayscale - all channels equal in BGR
+        unique_values = np.unique(result)
+        assert all(val in [0, 255] for val in unique_values)
+
+    # Error validation tests
+    def test_negative_threshold1_raises(self, color_image):
+        with pytest.raises(ValueError, match="non-negative"):
+            CannyEdgeDetection({"threshold1": -1, "threshold2": 150}).compute(color_image)
+
+    def test_negative_threshold2_raises(self, color_image):
+        with pytest.raises(ValueError, match="non-negative"):
+            CannyEdgeDetection({"threshold1": 50, "threshold2": -1}).compute(color_image)
+
+    def test_threshold1_greater_than_threshold2_raises(self, color_image):
+        with pytest.raises(ValueError, match="less than or equal"):
+            CannyEdgeDetection({"threshold1": 200, "threshold2": 100}).compute(color_image)
+
+    def test_unsupported_image_shape_raises(self):
+        bad_image = np.zeros((100, 100, 5), dtype=np.uint8)  # 5-channel
+        with pytest.raises(ValueError, match="Unsupported image shape"):
+            CannyEdgeDetection({}).compute(bad_image)
+
+    # Float32 and uint16 image tests
+    def test_float32_input(self):
+        # Float image in [0, 1] range
+        img = np.random.rand(50, 50, 3).astype(np.float32)
+        result = CannyEdgeDetection({}).compute(img)
+        assert result.dtype == np.uint8
+        assert result.shape[2] == 3
+
+    def test_uint16_input(self):
+        img = np.random.randint(0, 65535, (50, 50, 3), dtype=np.uint16)
+        result = CannyEdgeDetection({}).compute(img)
+        assert result.dtype == np.uint8
+        assert result.shape[2] == 3
+
+    def test_float64_input(self):
+        # Float64 image with arbitrary range
+        img = np.random.rand(50, 50, 3).astype(np.float64) * 100
+        result = CannyEdgeDetection({}).compute(img)
+        assert result.dtype == np.uint8
+        assert result.shape[2] == 3
