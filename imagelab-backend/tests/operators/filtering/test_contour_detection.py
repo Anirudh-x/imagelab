@@ -26,9 +26,9 @@ def make_rect_image(channels=3, bg=0, fg=255):
     "params",
     [
         {},  # defaults
-        {"color": "#00FF00", "thickness": 1, "retrieval_mode": "EXTERNAL", "approximation_method": "SIMPLE"},
-        {"color": "#FF0000", "thickness": 2, "retrieval_mode": "TREE", "approximation_method": "NONE"},
-        {"color": "#0000FF", "thickness": 3, "retrieval_mode": "LIST", "approximation_method": "SIMPLE"},
+        {"rgbcolors_input": "#00FF00", "thickness": 1, "mode": "EXTERNAL", "method": "SIMPLE"},
+        {"rgbcolors_input": "#FF0000", "thickness": 2, "mode": "TREE", "method": "NONE"},
+        {"rgbcolors_input": "#0000FF", "thickness": 3, "mode": "EXTERNAL", "method": "NONE"},
     ],
 )
 def test_contour_detection_returns_valid_image(params):
@@ -40,6 +40,20 @@ def test_contour_detection_returns_valid_image(params):
 
     assert result.shape == image.shape
     assert result.dtype == image.dtype
+
+
+def test_invalid_mode_raises():
+    """Mode values outside _MODE_MAP should raise ValueError."""
+    op = make_operator({"mode": "LIST"})
+    with pytest.raises(ValueError, match="Invalid contour mode"):
+        op.compute(make_rect_image())
+
+
+def test_invalid_method_raises():
+    """Method values outside _METHOD_MAP should raise ValueError."""
+    op = make_operator({"method": "UNKNOWN"})
+    with pytest.raises(ValueError, match="Invalid contour method"):
+        op.compute(make_rect_image())
 
 
 @pytest.mark.parametrize("channels", [1, 3, 4])
