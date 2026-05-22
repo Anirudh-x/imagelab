@@ -163,7 +163,6 @@ class TestDrawEllipse:
         ).compute(blank)
         assert result[:, :, 2].max() > 0
 
-    @pytest.mark.xfail(strict=True, reason="Known height/width axes swap bug in DrawEllipse")
     def test_axes_swap_bug(self):
         blank = np.zeros((100, 100, 3), dtype=np.uint8)
         result = DrawEllipse(
