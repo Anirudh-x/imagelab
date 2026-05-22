@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import pytest
 
 from app.operators.drawing.draw_arrow_line import DrawArrowLine
 from app.operators.drawing.draw_circle import DrawCircle
